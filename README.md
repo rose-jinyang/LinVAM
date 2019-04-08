@@ -2,7 +2,8 @@
 Linux Voice Activated Macro
 ## Status
 This project is currently a work-in-progress and is minimally functional.
-## Dependencies
+## Requirements
+- python3
 - PyQt5
 ## Install
 - $sudo git clone https://github.com/rose-jinyang/LinVAM.git
