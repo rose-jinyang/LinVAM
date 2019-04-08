@@ -1,12 +1,12 @@
 # LinVAM
 Linux Voice Activated Macro
-##Status
+## Status
 This project is currently a work-in-progress and is minimally functional.
-##Dependencies
+## Dependencies
 - PyQt5
-##Install
+## Install
 - $sudo git clone https://github.com/rose-jinyang/LinVAM.git
-##Usage
+## Usage
 This script must be run with root privilege because it must hook and simulate input devices such as keyboard, mouse etc.
 - $cd LinVAM
 - $sudo python ./main.py
