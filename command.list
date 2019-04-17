@@ -1,0 +1,5 @@
+go /1e-2/
+back /1e-3/
+left /1e-10/
+right /1e-3/
+stop /1e-8/

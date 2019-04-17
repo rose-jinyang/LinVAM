@@ -26,14 +26,13 @@ class MainWnd(QWidget):
         self.ui.ok.clicked.connect(self.slotOK)
         self.ui.cancel.clicked.connect(self.slotCancel)
 
-        self.m_profileExecutor.start()
-
         if self.loadFromDatabase() > 0 :
         # if self.loadTestProfiles() > 0:
             w_jsonProfile = self.ui.profileCbx.itemData(0)
             if w_jsonProfile != None:
                 self.m_activeProfile = json.loads(w_jsonProfile)
                 self.m_profileExecutor.setProfile(self.m_activeProfile)
+                self.m_profileExecutor.start()
 
     def saveToDatabase(self):
         w_profiles = []
@@ -66,43 +65,48 @@ class MainWnd(QWidget):
         w_carProfileDict = {
             "name": "car game",
             "commands": [
-                {'name': 'up',
+                {'name': 'forward',
                  'actions': [
-                     {'name': 'key action', 'key': 'up', 'type': 1},
-                     {'name': 'pause action', 'time': 0.03}
+                     {'name': 'key action', 'key': 'up', 'type': 1}
                  ],
                  'repeat': 1,
-                 'async': False
+                 'async': False,
+                 'threshold': 12
+                 },
+                {'name': 'back',
+                 'actions': [
+                     {'name': 'key action', 'key': 'down', 'type': 1}
+                 ],
+                 'repeat': 1,
+                 'async': False,
+                 'threshold': 3
                  },
                 {'name': 'left',
                  'actions': [{'name': 'key action', 'key': 'right', 'type': 0},
-                             {'name': 'pause action', 'time': 0.03},
                              {'name': 'key action', 'key': 'left', 'type': 1},
-                             {'name': 'pause action', 'time': 0.03}
                              ],
                  'repeat': 1,
-                 'async': False
+                 'async': False,
+                 'threshold': 10
                  },
                 {'name': 'right',
                  'actions': [{'name': 'key action', 'key': 'left', 'type': 0},
-                             {'name': 'pause action', 'time': 0.03},
                              {'name': 'key action', 'key': 'right', 'type': 1},
-                             {'name': 'pause action', 'time': 0.03}
                              ],
                  'repeat': 1,
-                 'async': False
+                 'async': False,
+                 'threshold': 3
                  },
                 {'name': 'stop',
                  'actions': [
                      {'name': 'key action', 'key': 'left', 'type': 0},
-                     {'name': 'pause action', 'time': 0.03},
                      {'name': 'key action', 'key': 'right', 'type': 0},
-                     {'name': 'pause action', 'time': 0.03},
                      {'name': 'key action', 'key': 'up', 'type': 0},
-                     {'name': 'pause action', 'time': 0.03}
+                     {'name': 'key action', 'key': 'down', 'type': 0}
                  ],
                  'repeat': 1,
-                 'async': False
+                 'async': False,
+                 'threshold': 8
                  }
             ]
         }
@@ -117,7 +121,8 @@ class MainWnd(QWidget):
                      {'name': 'pause action', 'time': 0.01}
                  ],
                  'repeat': -1,
-                 'async': True
+                 'async': True,
+                 'threshold': 3
                  },
                 {'name': 'left',
                  'actions': [
@@ -126,7 +131,8 @@ class MainWnd(QWidget):
                      {'name': 'pause action', 'time': 0.005}
                  ],
                  'repeat': -1,
-                 'async': True
+                 'async': True,
+                 'threshold': 3
                  },
                 {'name': 'right',
                  'actions': [
@@ -135,7 +141,8 @@ class MainWnd(QWidget):
                      {'name': 'pause action', 'time': 0.005}
                  ],
                  'repeat': -1,
-                 'async': True
+                 'async': True,
+                 'threshold': 3
                  },
                 {'name': 'down',
                  'actions': [
@@ -144,7 +151,8 @@ class MainWnd(QWidget):
                      {'name': 'pause action', 'time': 0.005}
                  ],
                  'repeat': -1,
-                 'async': True
+                 'async': True,
+                 'threshold': 3
                  },
                 {'name': 'shoot',
                  'actions': [
@@ -152,7 +160,8 @@ class MainWnd(QWidget):
                      {'name': 'pause action', 'time': 0.03}
                  ],
                  'repeat': 1,
-                 'async': False
+                 'async': False,
+                 'threshold': 3
                  },
                 {'name': 'stop',
                  'actions': [
@@ -163,7 +172,8 @@ class MainWnd(QWidget):
                      {'name': 'mouse click action', 'button': 'left', 'type': 0}
                  ],
                  'repeat': 1,
-                 'async': False
+                 'async': False,
+                 'threshold': 3
                  }
             ]
         }
@@ -190,6 +200,7 @@ class MainWnd(QWidget):
         w_profileEditWnd = ProfileEditWnd(None, self)
         if w_profileEditWnd.exec() == QDialog.Accepted:
             w_profile = w_profileEditWnd.m_profile
+            self.m_profileExecutor.setProfile(w_profile)
             self.ui.profileCbx.addItem(w_profile['name'])
             w_jsonProfile = json.dumps(w_profile)
             self.ui.profileCbx.setItemData(self.ui.profileCbx.count()-1, w_jsonProfile)
@@ -201,6 +212,7 @@ class MainWnd(QWidget):
         w_profileEditWnd = ProfileEditWnd(w_profile, self)
         if w_profileEditWnd.exec() == QDialog.Accepted:
             w_profile = w_profileEditWnd.m_profile
+            self.m_profileExecutor.setProfile(w_profile)
             self.ui.profileCbx.setItemText(w_idx, w_profile['name'])
             w_jsonProfile = json.dumps(w_profile)
             self.ui.profileCbx.setItemData(w_idx, w_jsonProfile)
@@ -210,6 +222,12 @@ class MainWnd(QWidget):
         if w_curIdx >= 0:
             self.ui.profileCbx.removeItem(w_curIdx)
 
+        w_curIdx = self.ui.profileCbx.currentIndex()
+        if w_curIdx >= 0:
+            w_jsonProfile = self.ui.profileCbx.itemData(w_curIdx)
+            w_profile = json.loads(w_jsonProfile)
+            self.m_profileExecutor.setProfile(w_profile)
+
     def slotListeningEnabled(self, p_enabled):
         if p_enabled:
             self.m_profileExecutor.setEnableListening(True)
@@ -218,9 +236,11 @@ class MainWnd(QWidget):
 
     def slotOK(self):
         self.saveToDatabase()
+        self.m_profileExecutor.stop()
         self.close()
 
     def slotCancel(self):
+        self.m_profileExecutor.stop()
         self.close()
         exit()
 

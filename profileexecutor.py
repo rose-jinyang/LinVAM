@@ -4,43 +4,73 @@ import time
 import threading
 import copy
 import json
+import sys, os, pyaudio
+from pocketsphinx.pocketsphinx import *
+from sphinxbase.sphinxbase import *
 
 class ProfileExecutor(threading.Thread):
     mouse = Controller()
 
     def __init__(self, p_profile = None):
         threading.Thread.__init__(self)
-        self.m_profile = p_profile
+        self.setProfile(p_profile)
         self.m_stop = False
         self.m_listening = True
         self.m_cmdThreads = {}
 
+        self.m_config = Decoder.default_config()
+        self.m_config.set_string('-hmm', os.path.join('model', 'en-us/en-us'))
+        self.m_config.set_string('-dict', os.path.join('model', 'en-us/cmudict-en-us.dict'))
+        self.m_config.set_string('-kws', 'command.list')
+
+        p = pyaudio.PyAudio()
+        self.m_stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True)
+        self.m_stream.start_stream()
+
+        # Process audio chunk by chunk. On keyword detected perform action and restart search
+        self.m_decoder = Decoder(self.m_config)
+
     def setProfile(self, p_profile):
         self.m_profile = p_profile
+        if self.m_profile == None:
+            return
+
+        w_commandWordFile = open('command.list', 'w')
+        w_commands = self.m_profile['commands']
+        i = 0
+        for w_command in w_commands:
+            if i != 0:
+                w_commandWordFile.write('\n')
+            w_commandWordFile.write(w_command['name'] + ' /1e-%d/' % w_command['threshold'])
+            i = i + 1
+        w_commandWordFile.close()
+        self.m_config.set_string('-kws', 'command.list')
 
     def setEnableListening(self, p_enable):
         self.m_listening = p_enable
 
     def run(self):
+        self.m_decoder.start_utt()
         while self.m_stop != True:
-            keyboard.wait('ctrl+alt')
-            if self.m_listening != True:
-                continue
+            buf = self.m_stream.read(1024)
 
-            for i in range(3):
-                self.doCommand('up')
-                time.sleep(0.5)
+            self.m_decoder.process_raw(buf, False, False)
 
-                self.doCommand('left')
-                time.sleep(0.5)
+            if self.m_decoder.hyp() != None:
+                # print([(seg.word, seg.prob, seg.start_frame, seg.end_frame) for seg in decoder.seg()])
+                # print("Detected keyword, restarting search")
+                #
+                # Here you run the code you want based on keyword
+                #
+                for w_seg in self.m_decoder.seg():
+                    self.doCommand(w_seg.word.rstrip())
 
-                self.doCommand('right')
-                time.sleep(0.5)
-
-                self.doCommand('stop')
+                self.m_decoder.end_utt()
+                self.m_decoder.start_utt()
 
     def stop(self):
         self.m_stop = True
+        threading.Thread.join(self)
 
     def doAction(self, p_action):
         # {'name': 'key action', 'key': 'left', 'type': 0}
@@ -157,162 +187,3 @@ class ProfileExecutor(threading.Thread):
         if p_cmdName in self.m_cmdThreads.keys():
             self.m_cmdThreads[p_cmdName].stop()
             del self.m_cmdThreads[p_cmdName]
-
-# def carGameTest():
-#     w_profileDict = {
-#         "name": "car game",
-#         "commands": [
-#             {'name': 'up',
-#              'actions': [
-#                  {'name': 'key action', 'key': 'up', 'type': 1},
-#                  {'name': 'pause action', 'time': 0.03}
-#              ],
-#              'repeat': 1,
-#              'async': False
-#              },
-#             {'name': 'left',
-#              'actions': [{'name': 'key action', 'key': 'right', 'type': 0},
-#                          {'name': 'pause action', 'time': 0.03},
-#                          {'name': 'key action', 'key': 'left', 'type': 1},
-#                          {'name': 'pause action', 'time': 0.03}
-#                          ],
-#              'repeat': 1,
-#              'async': False
-#              },
-#             {'name': 'right',
-#              'actions': [{'name': 'key action', 'key': 'left', 'type': 0},
-#                          {'name': 'pause action', 'time': 0.03},
-#                          {'name': 'key action', 'key': 'right', 'type': 1},
-#                          {'name': 'pause action', 'time': 0.03}
-#                          ],
-#              'repeat': 1,
-#              'async': False
-#              },
-#             {'name': 'stop',
-#              'actions': [
-#                  {'name': 'key action', 'key': 'left', 'type': 0},
-#                  {'name': 'pause action', 'time': 0.03},
-#                  {'name': 'key action', 'key': 'right', 'type': 0},
-#                  {'name': 'pause action', 'time': 0.03},
-#                  {'name': 'key action', 'key': 'up', 'type': 0},
-#                  {'name': 'pause action', 'time': 0.03}
-#              ],
-#              'repeat': 1,
-#              'async': False
-#              }
-#         ]
-#     }
-#
-#     w_ProfileExecutor = ProfileExecutor(w_profileDict)
-#
-#     print("Move to the target window and press spacebar")
-#     keyboard.wait('space')
-#
-#     print("Started !")
-#
-#     for i in range(5):
-#         w_ProfileExecutor.doCommand('up')
-#         time.sleep(0.5)
-#
-#         w_ProfileExecutor.doCommand('left')
-#         time.sleep(0.5)
-#
-#         w_ProfileExecutor.doCommand('right')
-#         time.sleep(0.5)
-#
-#         w_ProfileExecutor.doCommand('stop')
-#
-# def airplaneGameTest():
-#     w_profileDict = {
-#         "name": "airplane game",
-#         "commands": [
-#             {'name': 'up',
-#              'actions': [
-#                  {'name': 'command stop action', 'command name': 'down'},
-#                  {'name': 'mouse move action', 'x':0, 'y':-5, 'absolute': False},
-#                  {'name': 'pause action', 'time': 0.01}
-#              ],
-#              'repeat': -1,
-#              'async': True
-#             },
-#             {'name': 'left',
-#              'actions': [
-#                  {'name': 'command stop action', 'command name':'right'},
-#                  {'name': 'mouse move action', 'x':-5, 'y':0, 'absolute': False},
-#                  {'name': 'pause action', 'time': 0.005}
-#              ],
-#              'repeat': -1,
-#              'async': True
-#             },
-#             {'name': 'right',
-#              'actions': [
-#                  {'name': 'command stop action', 'command name': 'left'},
-#                  {'name': 'mouse move action', 'x':5, 'y':0, 'absolute': False},
-#                  {'name': 'pause action', 'time': 0.005}
-#              ],
-#              'repeat': -1,
-#              'async': True
-#             },
-#             {'name': 'down',
-#              'actions': [
-#                  {'name': 'command stop action', 'command name': 'up'},
-#                  {'name': 'mouse move action', 'x':0, 'y':5, 'absolute': False},
-#                  {'name': 'pause action', 'time': 0.005}
-#              ],
-#              'repeat': -1,
-#              'async': True
-#             },
-#             {'name': 'shoot',
-#              'actions': [
-#                  {'name': 'mouse click action', 'button':'left', 'type': 1},
-#                  {'name': 'pause action', 'time': 0.03}
-#              ],
-#              'repeat': 1,
-#              'async': False
-#             },
-#             {'name': 'stop',
-#              'actions': [
-#                  {'name': 'command stop action', 'command name': 'up'},
-#                  {'name': 'command stop action', 'command name': 'left'},
-#                  {'name': 'command stop action', 'command name': 'right'},
-#                  {'name': 'command stop action', 'command name': 'down'},
-#                  {'name': 'mouse click action', 'button': 'left', 'type': 0}
-#              ],
-#              'repeat': 1,
-#              'async': False
-#              }
-#         ]
-#     }
-#
-#     w_ProfileExecutor = ProfileExecutor(w_profileDict)
-#
-#     print("Move to the target window and press the spacebar to start")
-#     keyboard.wait('space')
-#
-#     time.sleep(1)
-#
-#     print("Started !")
-#
-#     for i in range(3):
-#         w_ProfileExecutor.doCommand('shoot')
-#         time.sleep(1)
-#
-#         w_ProfileExecutor.doCommand('up')
-#         time.sleep(1)
-#
-#         w_ProfileExecutor.doCommand('down')
-#         time.sleep(0.5)
-#
-#         w_ProfileExecutor.stopCommand('down')
-#
-#         w_ProfileExecutor.doCommand('left')
-#         time.sleep(0.5)
-#
-#         w_ProfileExecutor.doCommand('right')
-#         time.sleep(0.5)
-#
-#         w_ProfileExecutor.doCommand('stop')
-#
-# if __name__ == "__main__":
-#     carGameTest()
-#     # airplaneGameTest()
