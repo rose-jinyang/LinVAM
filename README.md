@@ -31,13 +31,13 @@ This script must be run with root privilege because it must hook and simulate in
 
 ### Profiles
 Multiple profiles are supported.  To create a new profile for a specific task/game click new and the main profile editor window will be displayed
-![Main GUI](https://github.com/aidygus/LinVAM/.img/gui.png)
+![Main GUI](https://github.com/aidygus/LinVAM/tree/master/.img/gui.png)
 ### Key combinations
 To assign key combinations first decide which functional key to press by clicking on Ctrl, Alt, Shift or Win to denote left or right key then press the actual command key
-![Main GUI](https://github.com/aidygus/LinVAM/.img/combination.png)
+![Main GUI](https://github.com/aidygus/LinVAM/tree/master/.img/combination.png)
 ### Complex commands
 It is possible to add multiple actions to a voice command for complex macros with the ability to add a pause between each action.
 You can also assign mouse movements and system commands if you require (eg opening applications such as calculator, browser etc)
-![Main GUI](https://github.com/aidygus/LinVAM/.img/complex.png)
+![Main GUI](https://github.com/aidygus/LinVAM/tree/master/.img/complex.png)
 ### Threshold
 As a rough guide use a value of 10 for each syllable of a word then tweak it down for better accuracy.
