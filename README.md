@@ -9,6 +9,8 @@ This project is currently a work-in-progress and is minimally functional.
 ## Install
 - $ pip3 install PyQt5
 - $ pip3 install python3-xlib
+- $ pip3 install PyAudio
+- $ pip3 install pocketsphinx
 - $ git clone https://github.com/rose-jinyang/LinVAM.git
 ## Usage
 This script must be run with root privilege because it must hook and simulate input devices such as keyboard, mouse etc.
