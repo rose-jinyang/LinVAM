@@ -6,6 +6,8 @@ This project is currently a work-in-progress and is minimally functional.
 - python3
 - PyQt5
 - python3-xlib
+- PyAudio
+- pocketsphinx
 ## Install
 - $ pip3 install PyQt5
 - $ pip3 install python3-xlib
