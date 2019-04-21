@@ -1,9 +1,9 @@
-victor recall ship /1e-40/
-victor cargo scoop /1e-45/
-balance power levels /1e-60/
+recall ship /1e-30/
+cargo scoop /1e-30/
+balance power levels /1e-30/
 power to weapons /1e-50/
-power to engineering /1e-65/
-power to shields /1e-50/
+power to core /1e-40/
+power to shields /1e-40/
 recall fighter /1e-40/
 fighter defend me /1e-50/
 fighter attack target /1e-60/
@@ -18,7 +18,7 @@ previous fire group /1e-60/
 switch hud mode /1e-30/
 toggle night vision /1e-40/
 toggle orbital lines /1e-50/
-verity full speed /1e-20/
+full speed /1e-20/
 approach speed /1e-20/
 full stop /1e-20/
 target next system /1e-50/
@@ -28,15 +28,15 @@ previous hostile target /1e-70/
 cycle next target /1e-50/
 cycle previous target /1e-70/
 victor full beams /1e-40/
-select first wingman /1e-45/
-select second wingman /1e-50/
-select third wingman /1e-45/
+select wingman alpha /1e-60/
+select wingman beta /1e-60/
+select wingman charlie /1e-60/
 select wing target /1e-50/
 target next subsystem /1e-50/
 target previous subsystem /1e-70/
 wingman nav lock /1e-35/
-engage supercruise /1e-50/
-engage jumpdrive /1e-40/
+engage super cruise /1e-50/
+engage jump drive /1e-40/
 toggle silent running /1e-60/
 deploy heat sink /1e-40/
 deploy shield boost /1e-40/
