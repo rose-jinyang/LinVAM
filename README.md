@@ -14,6 +14,7 @@ Known bugs and planned additions
 - python3
 - PyQt5
 - python3-xlib
+- pyaudio
 - pocketsphinx
 - swig3.0
 ## Install
