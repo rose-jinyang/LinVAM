@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -10,6 +11,7 @@ import pickle
 import time
 import keyboard
 import threading
+import signal
 
 class MainWnd(QWidget):
     def __init__(self, p_parent = None):
@@ -25,6 +27,7 @@ class MainWnd(QWidget):
         self.ui.listeningChk.stateChanged.connect(self.slotListeningEnabled)
         self.ui.ok.clicked.connect(self.slotOK)
         self.ui.cancel.clicked.connect(self.slotCancel)
+        signal.signal(signal.SIGINT, signal.SIG_DFL)
 
         if self.loadFromDatabase() > 0 :
         # if self.loadTestProfiles() > 0:
