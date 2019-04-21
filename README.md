@@ -1,7 +1,7 @@
 # LinVAM
 Linux Voice Activated Macro
 ## Status
-This project is currently a work-in-progress and is minimally functional.
+This project is currently a work-in-progress and is minimally functional only for english.
 
 Utilising Pocketsphinx, a lightweight voice to text engine you can specify voice commands for the tool to recognise and actions to perform.
 
@@ -19,15 +19,16 @@ Known bugs and planned additions
 ## Install
 - $ pip3 install PyQt5
 - $ pip3 install python3-xlib
+- $ pip3 install pyaudio
+- $ sudo ln -s /usr/bin/swig3.0 /usr/bin/swig
 - $ pip3 install pocketsphinx
 - $ sudo apt-get install swig3.0
-- $ sudo ln -s /usr/bin/swig3.0 /usr/bin/swig
 - $ git clone https://github.com/rose-jinyang/LinVAM.git
 ## Usage
 This script must be run with root privilege because it must hook and simulate input devices such as keyboard, mouse etc.
 - $ cd LinVAM
 - $ xhost +
-- $ sudo python3 ./main.py
+- $ sudo ./main.py
 
 ### Profiles
 Multiple profiles are supported.  To create a new profile for a specific task/game click new and the main profile editor window will be displayed
