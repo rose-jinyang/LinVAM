@@ -2,9 +2,7 @@ import keyboard
 from pynput.mouse import Button, Controller
 import time
 import threading
-import copy
-import json
-import sys, os, pyaudio
+import os, pyaudio
 from pocketsphinx.pocketsphinx import *
 from sphinxbase.sphinxbase import *
 
