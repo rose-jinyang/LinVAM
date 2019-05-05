@@ -8,9 +8,6 @@ import json
 from profileexecutor import ProfileExecutor
 import sys
 import pickle
-import time
-import keyboard
-import threading
 import signal
 
 class MainWnd(QWidget):
