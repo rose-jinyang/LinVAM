@@ -3,6 +3,7 @@ from pynput.mouse import Button, Controller
 import time
 import threading
 import os, pyaudio
+import shutil
 from pocketsphinx.pocketsphinx import *
 from sphinxbase.sphinxbase import *
 
@@ -28,12 +29,21 @@ class ProfileExecutor(threading.Thread):
         # Process audio chunk by chunk. On keyword detected perform action and restart search
         self.m_decoder = Decoder(self.m_config)
 
+    def getSettingsPath(self, setting):
+        home = os.path.expanduser("~") + '/.linvam/'
+        if not os.path.exists(home):
+            os.mkdir(home)
+        if not os.path.exists(home + setting):
+            shutil.copyfile(setting, home + setting)
+
+        return home + setting
+
     def setProfile(self, p_profile):
         self.m_profile = p_profile
         if self.m_profile == None:
             return
 
-        w_commandWordFile = open('command.list', 'w')
+        w_commandWordFile = open(self.getSettingsPath('command.list'), 'w')
         w_commands = self.m_profile['commands']
         i = 0
         for w_command in w_commands:
@@ -42,7 +52,7 @@ class ProfileExecutor(threading.Thread):
             w_commandWordFile.write(w_command['name'] + ' /1e-%d/' % w_command['threshold'])
             i = i + 1
         w_commandWordFile.close()
-        self.m_config.set_string('-kws', 'command.list')
+        self.m_config.set_string('-kws', self.getSettingsPath('command.list'))
 
     def setEnableListening(self, p_enable):
         self.m_listening = p_enable

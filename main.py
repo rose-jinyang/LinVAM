@@ -9,6 +9,8 @@ from profileexecutor import ProfileExecutor
 import sys
 import pickle
 import signal
+import os
+import shutil
 
 class MainWnd(QWidget):
     def __init__(self, p_parent = None):
@@ -45,12 +47,12 @@ class MainWnd(QWidget):
             w_profile = json.loads(w_jsonProfile)
             w_profiles.append(w_profile)
 
-        with open("profiles.dat", "wb") as f:
+        with open(self.getSettingsPath("profiles.dat"), "wb") as f:
             pickle.dump(w_profiles, f, pickle.HIGHEST_PROTOCOL)
 
     def loadFromDatabase(self):
         w_profiles = []
-        with open("profiles.dat", "rb") as f:
+        with open(self.getSettingsPath("profiles.dat"), "rb") as f:
             w_profiles = pickle.load(f)
 
         for w_profile in w_profiles:
@@ -59,6 +61,15 @@ class MainWnd(QWidget):
             self.ui.profileCbx.setItemData(self.ui.profileCbx.count() - 1, w_jsonProfile)
 
         return len(w_profiles)
+
+    def getSettingsPath(self, setting):
+        home = os.path.expanduser("~") + '/.linvam/'
+        if not os.path.exists(home):
+            os.mkdir(home)
+        if not os.path.exists(home + setting):
+            shutil.copyfile(setting, home + setting)
+
+        return home + setting
 
     def loadTestProfiles(self):
 
