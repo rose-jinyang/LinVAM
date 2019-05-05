@@ -6,7 +6,6 @@ from keyactioneditwnd import KeyActionEditWnd
 from mouseactioneditwnd import MouseActionEditWnd
 from pauseactioneditwnd import PauseActionEditWnd
 import json
-import keyboard
 
 class CommandEditWnd(QDialog):
     def __init__(self, p_command, p_parent = None):

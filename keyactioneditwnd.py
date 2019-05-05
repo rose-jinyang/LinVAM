@@ -2,9 +2,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from ui_keyactioneditwnd import Ui_KeyActionEditDialog
-import json
 import keyboard
-import time
 import threading
 
 class KeyActionEditWnd(QDialog):
