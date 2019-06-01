@@ -2,7 +2,6 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from ui_pauseactioneditwnd import Ui_PauseActionEditDialog
-import json
 
 class PauseActionEditWnd(QDialog):
     def __init__(self, p_pauseAction, p_parent = None):
