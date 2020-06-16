@@ -30,7 +30,7 @@ class Ui_MainWidget(object):
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
         self.groupBox = QtWidgets.QGroupBox(MainWidget)
-        self.groupBox.setMinimumSize(QtCore.QSize(200, 0))
+        self.groupBox.setMinimumSize(QtCore.QSize(200, 42))
         self.groupBox.setAlignment(QtCore.Qt.AlignCenter)
         self.groupBox.setObjectName("groupBox")
         self.sliderVolume = QtWidgets.QSlider(self.groupBox)

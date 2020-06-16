@@ -306,8 +306,8 @@ class MainWnd(QWidget):
 		try:
 			args = shlex.split('xdotool search --name "(CLIENT)"')
 			window_id = str(subprocess.check_output(args))
-			window_id = window_id.replace('b\'', '');
-			window_id = window_id.replace('\\n\'','');
+			window_id = window_id.replace('b\'', '')
+			window_id = window_id.replace('\\n\'','')
 		except subprocess.CalledProcessError:
 			window_id = None
 			pass
