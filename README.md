@@ -77,5 +77,5 @@ If you own a HCS voicepack, copy the whole voicepack folder (like 'hcspack', 'hc
 /voicepacks/hcspack/...
 
 ### Improve voice recognition accuracy
-Please see this ressource on how to train the acoustic model of pocketsphinx to match your voice:
+Please see this resource on how to train the acoustic model of pocketsphinx to match your voice:
 https://cmusphinx.github.io/wiki/tutorialadapt/
