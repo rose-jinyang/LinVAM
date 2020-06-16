@@ -34,6 +34,7 @@
 	- added confirmation dialog for removing a profile (!)
 	- copy existing profile. added a copy button to the main menu
 	- properly shutdown audio recording stream
+	- updated gitignore to ignore audio files
 
 ### Dependencies
 	- ffplay
@@ -62,3 +63,4 @@
 		i gave julius-speech a quick try. its pretty easy to setup and looks promising, but it
 		also has its problems with detecting some "exotic" words. as not being a native
 		english speaker, my pronounciation is not the best sometimes, which doesn't help. :)
+	- look into make recognized words using regex expressions

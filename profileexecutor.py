@@ -291,7 +291,6 @@ class ProfileExecutor(threading.Thread):
                 os.system('xdotool' + window_cmd + ' keyup ' + str(w_key))
                 print("released key: ", w_key)
             elif w_type == 10:
-                print('xdotool ' + window_cmd + ' key ' + str(w_key))
                 os.system('xdotool' + window_cmd + ' key ' + str(w_key))
                 print("pressed and released key: ", w_key)
         else:

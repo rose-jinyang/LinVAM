@@ -304,7 +304,7 @@ class MainWnd(QWidget):
 		# try to help: if -noroot is supplied, but no xdowindowid, try to determine the id
 		# Elite Dangerous only
 		try:
-			args = shlex.split('xdotool search --name "(CLIENT)"')
+			args = shlex.split('xdotool search --name "\(CLIENT\)"')
 			window_id = str(subprocess.check_output(args))
 			window_id = window_id.replace('b\'', '');
 			window_id = window_id.replace('\\n\'','');
