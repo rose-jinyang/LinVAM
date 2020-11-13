@@ -13,6 +13,7 @@ class ProfileEditWnd(QDialog):
         self.ui = Ui_ProfileEditDialog()
         self.ui.setupUi(self)
         self.m_profile = {}
+        self.m_parent = p_parent
 
         self.ui.cmdTable.setHorizontalHeaderLabels(('Spoken command', 'Actions'))
         self.ui.cmdTable.setSelectionBehavior(QAbstractItemView.SelectRows)

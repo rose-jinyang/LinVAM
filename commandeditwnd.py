@@ -5,6 +5,7 @@ from ui_commandeditwnd import Ui_CommandEditDialog
 from keyactioneditwnd import KeyActionEditWnd
 from mouseactioneditwnd import MouseActionEditWnd
 from pauseactioneditwnd import PauseActionEditWnd
+from soundactioneditwnd import SoundActionEditWnd
 import json
 
 class CommandEditWnd(QDialog):
@@ -12,6 +13,7 @@ class CommandEditWnd(QDialog):
         super().__init__(p_parent)
         self.ui = Ui_CommandEditDialog()
         self.ui.setupUi(self)
+        self.m_parent = p_parent
 
         self.ui.deleteBut.clicked.connect(self.slotDelete)
         self.ui.ok.clicked.connect(self.slotOK)
@@ -27,6 +29,7 @@ class CommandEditWnd(QDialog):
         w_otherMenu = QMenu()
         w_otherMenu.addAction('Stop Another Command', self.slotStopAnotherCommand)
         w_otherMenu.addAction('Execute Another Command', self.slotDoAnotherCommand)
+        w_otherMenu.addAction('Play Sound', self.slotNewSoundEdit)
         self.ui.otherBut.setMenu(w_otherMenu)
 
         self.m_command = {}
@@ -73,6 +76,14 @@ class CommandEditWnd(QDialog):
             w_commandDoAction['command name'] = text
             self.addAction(w_commandDoAction)
 
+    def slotDoPlaySound(self):
+        text, okPressed = QInputDialog.getItem(self, "Set sound to play", "Enter sound file:", list(self.m_parent.m_parent.m_sound.m_sounds), 0, False)
+        if okPressed and text != '':
+            w_commandDoAction = {}
+            w_commandDoAction['name'] = 'command play sound'
+            w_commandDoAction['command name'] = text
+            self.addAction(w_commandDoAction)
+
     def slotNewKeyEdit(self):
         w_keyEditWnd = KeyActionEditWnd(None, self)
         if w_keyEditWnd.exec() == QDialog.Accepted:
@@ -87,6 +98,11 @@ class CommandEditWnd(QDialog):
         w_pauseEditWnd = PauseActionEditWnd(None, self)
         if w_pauseEditWnd.exec() == QDialog.Accepted:
             self.addAction(w_pauseEditWnd.m_pauseAction)
+
+    def slotNewSoundEdit(self):
+        w_soundEditWnd = SoundActionEditWnd(self.m_parent.m_parent.m_sound, None, self)
+        if w_soundEditWnd.exec() == QDialog.Accepted:
+            self.addAction(w_soundEditWnd.m_soundAction)
 
     def slotActionUp(self):
         currentIndex = self.ui.actionsListWidget.currentRow()
@@ -132,6 +148,10 @@ class CommandEditWnd(QDialog):
             if okPressed and text != '':
                 w_action['command name'] = text
                 w_jsonAction = json.dumps(w_action)
+        elif w_action['name'] == 'play sound':
+            w_soundEditWnd = SoundActionEditWnd(self.m_parent.m_parent.m_sound, w_action, self)
+            if w_soundEditWnd.exec() == QDialog.Accepted:
+                w_jsonAction = json.dumps(w_soundEditWnd.m_soundAction)
 
         w_item.setText(w_jsonAction)
         w_item.setData(Qt.UserRole, w_jsonAction)

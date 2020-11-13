@@ -127,5 +127,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Ignore voicepack files
+voicepacks/*
+
 # End of https://www.gitignore.io/api/python
  
